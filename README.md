@@ -30,7 +30,6 @@ cp .env.example .env
 编辑 `.env`，修改密码和密钥：
 
 ```
-MYSQL_ROOT_PASSWORD=<强密码>
 MYSQL_PASSWORD=<强密码>
 JWT_SECRET=<随机长字符串>
 ADMIN_USERNAME=admin
@@ -49,13 +48,13 @@ docker compose up -d --build
 
 ### 服务架构
 
-| 服务 | 说明 |
-|---|---|
-| proman | Go 后端 + React 前端，统一入口，端口 8080 |
-| mysql | MySQL 8.0，仅内部网络，数据持久化到 Docker volume |
-| redis | Redis 7，仅内部网络，数据持久化到 Docker volume |
+| 服务 | 容器名 | 说明 |
+|---|---|---|
+| proman | `proman` | Go 后端 + React 前端，统一入口，端口 8080 |
+| mysql | `proman-mysql` | MySQL 8.0，root 密码自动随机生成，数据持久化到 Docker volume |
+| redis | `proman-redis` | Redis 7，数据持久化到 Docker volume |
 
-三个服务均配置了健康检查，proman 会等待 MySQL 和 Redis 就绪后才启动。
+三个服务通过独立的 `proman-network` 桥接网络通信，均配置了健康检查和日志大小限制（防止磁盘撑满）。proman 会等待 MySQL 和 Redis 就绪后才启动。
 
 ## 本地开发
 

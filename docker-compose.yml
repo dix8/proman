@@ -1,22 +1,40 @@
+# Proman Docker Compose Configuration
+#
+# Quick Start:
+#   1. cp .env.example .env && vim .env  (change all passwords!)
+#   2. docker compose up -d --build
+#   3. Access at http://localhost:8080
+#
+# ⚠️  IMPORTANT: Change all default passwords in .env before deploying!
+
 services:
   proman:
     build:
       context: .
       dockerfile: server/Dockerfile
+    container_name: proman
     restart: unless-stopped
     environment:
-      MYSQL_DSN: ${MYSQL_USER}:${MYSQL_PASSWORD}@tcp(mysql:3306)/${MYSQL_DATABASE}?charset=utf8mb4&parseTime=True&loc=UTC
-      REDIS_ADDR: redis:6379
-      JWT_SECRET: ${JWT_SECRET}
-      ADMIN_USERNAME: ${ADMIN_USERNAME}
-      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      - MYSQL_DSN=${MYSQL_USER}:${MYSQL_PASSWORD}@tcp(mysql:3306)/${MYSQL_DATABASE}?charset=utf8mb4&parseTime=True&loc=UTC
+      - REDIS_ADDR=redis:6379
+      - JWT_SECRET=${JWT_SECRET}
+      - ADMIN_USERNAME=${ADMIN_USERNAME}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - TZ=Asia/Shanghai
     depends_on:
       mysql:
         condition: service_healthy
       redis:
         condition: service_healthy
     ports:
-      - 8080:8080
+      - "8080:8080"
+    networks:
+      - proman-network
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "3"
     healthcheck:
       test: ["CMD", "wget", "-q", "--spider", "http://localhost:8080/healthz"]
       interval: 10s
@@ -25,32 +43,59 @@ services:
 
   mysql:
     image: mysql:8.0
+    container_name: proman-mysql
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      - MYSQL_RANDOM_ROOT_PASSWORD=yes
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - TZ=Asia/Shanghai
     volumes:
       - mysql-data:/var/lib/mysql
+    networks:
+      - proman-network
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "3"
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 5s
       timeout: 3s
       retries: 10
       start_period: 30s
+#    ports:
+#      - "3306:3306"  # Uncomment to access MySQL from outside Docker
 
   redis:
     image: redis:7-alpine
+    container_name: proman-redis
     restart: unless-stopped
+    environment:
+      - TZ=Asia/Shanghai
     volumes:
       - redis-data:/data
+    networks:
+      - proman-network
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 5s
       timeout: 3s
       retries: 5
+#    ports:
+#      - "6379:6379"  # Uncomment to access Redis from outside Docker
 
 volumes:
   mysql-data:
   redis-data:
+
+networks:
+  proman-network:
+    driver: bridge
