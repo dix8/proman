@@ -1,0 +1,30 @@
+{
+  "name": "proman-web",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 5173",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1 --port 4173",
+    "check": "npm run build",
+    "format:check": "prettier --check \"src/**/*.{js,jsx}\" \"scripts/**/*.mjs\" \"package.json\"",
+    "format:write": "prettier --write \"src/**/*.{js,jsx}\" \"scripts/**/*.mjs\" \"package.json\"",
+    "smoke:m6": "node scripts/smoke-m6.mjs"
+  },
+  "dependencies": {
+    "@ant-design/icons": "^6.0.0",
+    "antd": "^5.27.0",
+    "axios": "^1.8.4",
+    "dayjs": "^1.11.19",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.5.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^5.0.0",
+    "playwright-core": "^1.53.0",
+    "prettier": "^3.8.1",
+    "vite": "^7.0.0"
+  }
+}

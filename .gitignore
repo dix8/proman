@@ -1,0 +1,14 @@
+server/.env.local
+server/.cache/
+server/.gocache-temp/
+server/.runtime/
+server/api
+server/api.exe
+server/api.exe~
+.codex-temp/
+.gocache/
+.gomodcache/
+web/node_modules/
+web/dist/
+web/.runtime/
+.internal-docs/

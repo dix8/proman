@@ -1,0 +1,16 @@
+.git
+.gocache
+.gomodcache
+.codex-temp
+
+server/api.exe
+server/.gocache-temp
+server/.env.local
+
+web/node_modules
+web/dist
+web/.env.local
+
+deploy/.env.prod
+
+*.log
