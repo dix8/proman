@@ -11,6 +11,6 @@ web/node_modules
 web/dist
 web/.env.local
 
-deploy/.env.prod
+.env
 
 *.log

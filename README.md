@@ -8,9 +8,10 @@
 - 适合为具体业务项目提供“版本更新内容维护 + 稳定只读查询”的接入能力
 
 仓库主要包含：
+- 正式部署入口：`docker-compose.yml`
+- 正式部署环境变量样板：`.env.example`
 - 后端服务：`server/`
 - 前端后台：`web/`
-- 正式部署编排：`deploy/`
 
 ## 当前进度
 
@@ -88,6 +89,8 @@ curl -X GET "http://localhost:8080/v1/versions/1.2.3/changelogs" \
 
 ```text
 proman/
+├── .env.example               # 正式部署环境变量样板
+├── docker-compose.yml         # 正式部署入口
 ├── server/                     # Go + Gin + GORM 后端
 │   ├── cmd/api/
 │   ├── internal/
@@ -98,9 +101,6 @@ proman/
 │   ├── scripts/                # smoke / 联调脚本
 │   ├── .env.example
 │   └── package.json
-├── deploy/                     # 正式部署编排
-│   ├── docker-compose.yml
-│   └── .env.prod.example
 └── README.md                   # 本文档
 ```
 
@@ -130,8 +130,8 @@ proman/
   - 页面间复用的轻量交互逻辑。
 - `web/scripts/`
   - smoke / 联调验收脚本。
-- `deploy/`
-  - 正式部署编排文件。
+- 根目录 `.env.example`
+  - 正式部署 / Docker Compose 环境变量样板。
 
 ## 环境准备
 
@@ -150,6 +150,9 @@ proman/
 本地开发需要自行准备可用的 MySQL / Redis 实例。
 
 ## 环境变量
+
+正式部署样板：
+- `.env.example`
 
 后端样板：
 - [server/.env.example](./server/.env.example)
@@ -186,6 +189,15 @@ proman/
 - 标题已有默认值
 
 但如果你要换后端地址，建议自行创建 `web/.env.local`。
+
+### 三类环境变量文件用途
+
+- 根目录 `.env.example`
+  - 用于正式部署 / `docker compose`，运行 `proman + mysql + redis`
+- `server/.env.example`
+  - 用于后端源码方式单独运行
+- `web/.env.example`
+  - 用于前端单独开发或覆盖开发环境变量
 
 ## 本地启动
 
@@ -253,14 +265,14 @@ npm run dev
 
 ## 正式部署
 
-当前仓库保留的 Compose 编排文件为：
-- `deploy/docker-compose.yml`
+当前仓库根目录提供正式部署入口文件：
+- `docker-compose.yml`
   - 用于单台服务器上的正式部署基线
 
 正式部署前，先准备生产环境变量文件：
 
 ```powershell
-copy deploy\.env.prod.example deploy\.env.prod
+copy .env.example .env
 ```
 
 至少需要按实际环境修改：
@@ -272,7 +284,7 @@ copy deploy\.env.prod.example deploy\.env.prod
 启动正式部署：
 
 ```powershell
-docker compose --env-file deploy/.env.prod -f deploy/docker-compose.yml up -d --build
+docker compose up -d --build
 ```
 
 启动后：
