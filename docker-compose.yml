@@ -9,9 +9,7 @@
 
 services:
   proman:
-    build:
-      context: .
-      dockerfile: server/Dockerfile
+    build: .
     container_name: proman
     restart: unless-stopped
     environment:
