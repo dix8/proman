@@ -31,6 +31,10 @@ func registerFrontendRoutes(router *gin.Engine, loggerInstance *log.Logger) {
 
 	loggerInstance.Printf("frontend static files enabled from %s", distDir)
 
+	router.GET("/", func(c *gin.Context) {
+		c.File(indexFile)
+	})
+
 	router.NoRoute(func(c *gin.Context) {
 		if c.Request.Method != http.MethodGet && c.Request.Method != http.MethodHead {
 			c.Status(http.StatusNotFound)
