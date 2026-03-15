@@ -485,17 +485,25 @@ export function VersionComparePage() {
             </div>
 
             <div className="table-toolbar">
-              <Space wrap>
+              <Space
+                wrap
+                direction={isMobile ? "vertical" : "horizontal"}
+                className={isMobile ? "compare-control-group" : undefined}
+              >
                 <Text strong>当前项目</Text>
                 <Tag color="default">
                   {selectedProject?.name || "未选择项目"}
                 </Tag>
               </Space>
-              <Space wrap>
+              <Space
+                wrap
+                direction={isMobile ? "vertical" : "horizontal"}
+                className={isMobile ? "compare-control-group" : undefined}
+              >
                 <Text strong>格式</Text>
                 <Select
                   value={exportFormat}
-                  style={{ width: 180 }}
+                  style={{ width: isMobile ? "100%" : 180 }}
                   data-testid="export-format-select"
                   options={[
                     { label: "Markdown", value: "markdown" },
@@ -506,13 +514,32 @@ export function VersionComparePage() {
               </Space>
             </div>
 
-            <div className="table-toolbar">
-              <Space wrap>
+            {!versionsLoading && selectedProjectId && allVersions.length === 0 ? (
+              <Alert
+                type="info"
+                showIcon
+                message="当前项目暂无版本可导出"
+                description="请先创建至少一个版本，再返回这里进行导出。"
+              />
+            ) : null}
+
+            <div className="table-toolbar compare-toolbar">
+              <Space
+                wrap
+                direction={isMobile ? "vertical" : "horizontal"}
+                className={isMobile ? "compare-control-group" : undefined}
+              >
                 <Text strong>指定版本</Text>
                 <Select
                   value={exportVersionId || undefined}
                   loading={versionsLoading}
-                  style={{ width: 260 }}
+                  disabled={allVersions.length === 0}
+                  placeholder={
+                    allVersions.length > 0
+                      ? "选择要导出的版本"
+                      : "暂无版本可选"
+                  }
+                  style={{ width: isMobile ? "100%" : 260 }}
                   data-testid="export-version-select"
                   showSearch
                   optionFilterProp="label"
