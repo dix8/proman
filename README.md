@@ -10,7 +10,7 @@ Version, changelog and announcement management system with an admin dashboard an
 
 - 单管理员后台，JWT 鉴权
 - 项目管理：创建、编辑、删除，独立 API Token
-- 版本管理：语义化版本号，草稿/发布状态流转
+- 版本管理：语义化版本号，草稿/发布状态流转，支持撤回发布
 - 更新日志：按版本维护，支持排序和 Markdown 预览
 - 公告管理：发布/撤回、置顶
 - 版本对比与日志导出
@@ -124,6 +124,7 @@ npm run dev
 - `GET/POST /api/projects/:id/versions` — 版本列表 / 创建
 - `GET/PUT/DELETE /api/versions/:id` — 版本详情 / 更新 / 删除
 - `PUT /api/versions/:id/publish` — 发布版本
+- `PUT /api/versions/:id/unpublish` — 撤回发布
 - `GET/POST /api/versions/:id/changelogs` — 日志列表 / 创建
 - `PUT/DELETE /api/changelogs/:id` — 更新 / 删除日志
 - `PUT /api/versions/:id/changelogs/reorder` — 日志排序
