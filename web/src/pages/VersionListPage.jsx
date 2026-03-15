@@ -227,7 +227,7 @@ export function VersionListPage() {
             {!isPublished ? (
               <Popconfirm
                 title="确认发布版本"
-                description={`发布后版本 ${record.version} 及其日志将进入只读状态，不可再编辑或删除。`}
+                description={`发布后版本 ${record.version} 及其日志将进入只读状态，如需修改可撤回发布。`}
                 okText="确认发布"
                 cancelText="取消"
                 onConfirm={() => handlePublish(record)}
@@ -330,7 +330,7 @@ export function VersionListPage() {
                 {project?.name || "项目版本"}
               </Title>
               <Paragraph className="placeholder-description">
-                这里管理项目版本的创建、编辑、发布与删除。已发布版本会被明确标记为只读，后续只能查看详情和日志。
+                这里管理项目版本的创建、编辑、发布与删除。已发布版本会进入只读状态，如需修改可撤回发布。
               </Paragraph>
             </div>
             <Button
@@ -345,7 +345,7 @@ export function VersionListPage() {
           <Alert
             type="info"
             showIcon
-            message="版本发布后立即进入只读态，版本号与日志都不可再编辑或删除。"
+            message="版本发布后进入只读态，如需修改可撤回发布恢复为草稿。"
           />
 
           <div className="table-toolbar">
@@ -481,7 +481,7 @@ export function VersionListPage() {
                           {!isPublished ? (
                             <Popconfirm
                               title="确认发布版本"
-                              description={`发布后版本 ${version.version} 及其日志将进入只读状态，不可再编辑或删除。`}
+                              description={`发布后版本 ${version.version} 及其日志将进入只读状态，如需修改可撤回发布。`}
                               okText="确认发布"
                               cancelText="取消"
                               onConfirm={() => handlePublish(version)}

@@ -259,7 +259,7 @@ export function VersionEditPage() {
             <Alert
               type="warning"
               showIcon
-              message="当前版本已发布，版本号已进入只读状态。日志也请在日志页按只读视图查看。"
+              message="当前版本已发布，处于只读状态。如需修改可撤回发布恢复为草稿。"
               action={
                 <Popconfirm
                   title="确认撤回发布"
