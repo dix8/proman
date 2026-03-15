@@ -230,6 +230,26 @@ func (s *VersionService) Publish(ctx context.Context, userID, versionID uint64) 
 	return published, nil
 }
 
+func (s *VersionService) Unpublish(ctx context.Context, userID, versionID uint64) (*model.Version, error) {
+	if userID == 0 || versionID == 0 {
+		return nil, apperror.New(http.StatusBadRequest, 40001, "参数错误")
+	}
+
+	unpublished, err := s.versionRepo.UnpublishByIDAndUserID(ctx, versionID, userID)
+	if err != nil {
+		var appErr *apperror.AppError
+		if errors.As(err, &appErr) {
+			return nil, appErr
+		}
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, apperror.New(http.StatusNotFound, 40402, "版本不存在")
+		}
+		return nil, apperror.Internal(err)
+	}
+
+	return unpublished, nil
+}
+
 func (s *VersionService) Compare(ctx context.Context, userID, projectID, fromVersionID, toVersionID uint64) (*CompareVersionsResult, error) {
 	if userID == 0 || projectID == 0 || fromVersionID == 0 || toVersionID == 0 {
 		return nil, apperror.New(http.StatusBadRequest, 40001, "参数错误")

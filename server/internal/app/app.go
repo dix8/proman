@@ -127,6 +127,7 @@ func New(loggerInstance *log.Logger) (*App, error) {
 	api.PUT("/versions/:id", versionHandler.Update)
 	api.DELETE("/versions/:id", versionHandler.Delete)
 	api.PUT("/versions/:id/publish", versionHandler.Publish)
+	api.PUT("/versions/:id/unpublish", versionHandler.Unpublish)
 	api.GET("/versions/:id/changelogs", changelogHandler.List)
 	api.POST("/versions/:id/changelogs", changelogHandler.Create)
 	api.PUT("/changelogs/:id", changelogHandler.Update)

@@ -4,6 +4,7 @@ import {
   Button,
   Card,
   Descriptions,
+  Popconfirm,
   Result,
   Space,
   Spin,
@@ -28,6 +29,7 @@ import {
   VERSION_STATUS_PUBLISHED,
   createVersion,
   fetchVersion,
+  unpublishVersion,
   updateVersion,
 } from "../services/versions";
 
@@ -153,6 +155,22 @@ export function VersionEditPage() {
     }
   }
 
+  async function handleUnpublish() {
+    try {
+      const updated = await unpublishVersion(versionId);
+      setVersion(updated);
+      form.setFieldsValue({
+        major: updated.major,
+        minor: updated.minor,
+        patch: updated.patch,
+        url: updated.url || "",
+      });
+      messageApi.success(`版本 ${updated.version} 已撤回发布`);
+    } catch (error) {
+      messageApi.error(error?.response?.data?.message || "撤回发布失败");
+    }
+  }
+
   if (loading) {
     return (
       <>
@@ -242,6 +260,17 @@ export function VersionEditPage() {
               type="warning"
               showIcon
               message="当前版本已发布，版本号已进入只读状态。日志也请在日志页按只读视图查看。"
+              action={
+                <Popconfirm
+                  title="确认撤回发布"
+                  description={`撤回后版本 ${version?.version} 将恢复为草稿状态，可继续编辑。`}
+                  okText="确认撤回"
+                  cancelText="取消"
+                  onConfirm={handleUnpublish}
+                >
+                  <Button size="small">撤回发布</Button>
+                </Popconfirm>
+              }
             />
           ) : null}
 

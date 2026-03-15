@@ -27,6 +27,7 @@ import {
   deleteVersion,
   fetchVersions,
   publishVersion,
+  unpublishVersion,
 } from "../services/versions";
 
 const { Paragraph, Title, Text } = Typography;
@@ -137,6 +138,16 @@ export function VersionListPage() {
     }
   }
 
+  async function handleUnpublish(record) {
+    try {
+      await unpublishVersion(record.id);
+      messageApi.success(`版本 ${record.version} 已撤回发布`);
+      await reloadCurrentPage();
+    } catch (error) {
+      messageApi.error(error?.response?.data?.message || "撤回发布失败");
+    }
+  }
+
   const columns = [
     {
       title: "版本号",
@@ -229,7 +240,22 @@ export function VersionListPage() {
                   发布
                 </Button>
               </Popconfirm>
-            ) : null}
+            ) : (
+              <Popconfirm
+                title="确认撤回发布"
+                description={`撤回后版本 ${record.version} 将恢复为草稿状态，可继续编辑。`}
+                okText="确认撤回"
+                cancelText="取消"
+                onConfirm={() => handleUnpublish(record)}
+              >
+                <Button
+                  size="small"
+                  data-testid={`version-unpublish-${record.id}`}
+                >
+                  撤回发布
+                </Button>
+              </Popconfirm>
+            )}
             {!isPublished ? (
               <Popconfirm
                 title="确认删除草稿版本"
@@ -467,7 +493,21 @@ export function VersionListPage() {
                                 发布
                               </Button>
                             </Popconfirm>
-                          ) : null}
+                          ) : (
+                            <Popconfirm
+                              title="确认撤回发布"
+                              description={`撤回后版本 ${version.version} 将恢复为草稿状态，可继续编辑。`}
+                              okText="确认撤回"
+                              cancelText="取消"
+                              onConfirm={() => handleUnpublish(version)}
+                            >
+                              <Button
+                                data-testid={`version-unpublish-${version.id}`}
+                              >
+                                撤回发布
+                              </Button>
+                            </Popconfirm>
+                          )}
                           {!isPublished ? (
                             <Popconfirm
                               title="确认删除草稿版本"

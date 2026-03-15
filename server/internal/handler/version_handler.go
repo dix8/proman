@@ -191,6 +191,22 @@ func (h *VersionHandler) Publish(c *gin.Context) {
 	response.Success(c, newVersionData(version))
 }
 
+func (h *VersionHandler) Unpublish(c *gin.Context) {
+	versionID, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil || versionID == 0 {
+		_ = c.Error(apperror.New(http.StatusBadRequest, 40001, "参数错误"))
+		return
+	}
+
+	version, err := h.versionService.Unpublish(c.Request.Context(), middleware.CurrentUserID(c), versionID)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	response.Success(c, newVersionData(version))
+}
+
 func (h *VersionHandler) Compare(c *gin.Context) {
 	projectID, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil || projectID == 0 {

@@ -74,6 +74,11 @@ export async function publishVersion(versionId) {
   return response.data.data;
 }
 
+export async function unpublishVersion(versionId) {
+  const response = await http.put(`/api/versions/${versionId}/unpublish`);
+  return response.data.data;
+}
+
 export async function fetchChangelogs(versionId, params) {
   const response = await http.get(`/api/versions/${versionId}/changelogs`, {
     params,

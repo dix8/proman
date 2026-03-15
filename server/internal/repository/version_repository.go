@@ -282,6 +282,39 @@ func (r *VersionRepository) PublishByIDAndUserID(ctx context.Context, versionID,
 	return &version, nil
 }
 
+func (r *VersionRepository) UnpublishByIDAndUserID(ctx context.Context, versionID, userID uint64) (*model.Version, error) {
+	var version model.Version
+
+	err := r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		lockedVersion, err := lockVersionForUpdateByIDAndUserID(tx.WithContext(ctx), versionID, userID)
+		if err != nil {
+			return err
+		}
+		if lockedVersion.Status != model.VersionStatusPublished {
+			return apperror.New(409, 40905, "非已发布版本不可撤回")
+		}
+		version = *lockedVersion
+
+		if err := tx.Model(&version).Updates(map[string]interface{}{
+			"status":       model.VersionStatusDraft,
+			"published_at": nil,
+		}).Error; err != nil {
+			return err
+		}
+
+		if err := scopedVersionQuery(tx.WithContext(ctx), userID).Where("versions.id = ?", versionID).First(&version).Error; err != nil {
+			return err
+		}
+
+		return nil
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return &version, nil
+}
+
 func lockVersionForUpdateByIDAndUserID(tx *gorm.DB, versionID, userID uint64) (*model.Version, error) {
 	var version model.Version
 	err := scopedVersionQuery(tx, userID).
