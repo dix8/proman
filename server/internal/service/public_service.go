@@ -166,6 +166,7 @@ func toPublicVersionDTO(version model.Version) PublicVersionDTO {
 		Major:       version.Major,
 		Minor:       version.Minor,
 		Patch:       version.Patch,
+		URL:         version.URL,
 		Version:     version.VersionString(),
 		Status:      version.Status,
 		PublishedAt: publishedAt,

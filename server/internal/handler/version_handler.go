@@ -19,9 +19,10 @@ type VersionHandler struct {
 }
 
 type versionRequest struct {
-	Major *int `json:"major"`
-	Minor *int `json:"minor"`
-	Patch *int `json:"patch"`
+	Major *int    `json:"major"`
+	Minor *int    `json:"minor"`
+	Patch *int    `json:"patch"`
+	URL   *string `json:"url"`
 }
 
 type versionData struct {
@@ -29,6 +30,7 @@ type versionData struct {
 	Major       uint    `json:"major"`
 	Minor       uint    `json:"minor"`
 	Patch       uint    `json:"patch"`
+	URL         string  `json:"url"`
 	Version     string  `json:"version"`
 	Status      string  `json:"status"`
 	PublishedAt *string `json:"published_at"`
@@ -119,6 +121,7 @@ func (h *VersionHandler) Create(c *gin.Context) {
 		Major:     req.Major,
 		Minor:     req.Minor,
 		Patch:     req.Patch,
+		URL:       req.URL,
 	})
 	if err != nil {
 		_ = c.Error(err)
@@ -147,6 +150,7 @@ func (h *VersionHandler) Update(c *gin.Context) {
 		Major:     req.Major,
 		Minor:     req.Minor,
 		Patch:     req.Patch,
+		URL:       req.URL,
 	})
 	if err != nil {
 		_ = c.Error(err)
@@ -227,6 +231,7 @@ func newVersionData(version *model.Version) versionData {
 		Major:       version.Major,
 		Minor:       version.Minor,
 		Patch:       version.Patch,
+		URL:         version.URL,
 		Version:     version.VersionString(),
 		Status:      version.Status,
 		PublishedAt: publishedAt,

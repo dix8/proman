@@ -1,4 +1,4 @@
-import { ArrowLeftOutlined } from "@ant-design/icons";
+import { ArrowLeftOutlined, LinkOutlined } from "@ant-design/icons";
 import {
   Alert,
   Button,
@@ -143,15 +143,22 @@ export function VersionListPage() {
       dataIndex: "version",
       key: "version",
       render: (value, record) => (
-        <Button
-          type="link"
-          style={{ padding: 0 }}
-          onClick={() =>
-            navigate(`/projects/${projectId}/versions/${record.id}/edit`)
-          }
-        >
-          {value}
-        </Button>
+        <Space>
+          <Button
+            type="link"
+            style={{ padding: 0 }}
+            onClick={() =>
+              navigate(`/projects/${projectId}/versions/${record.id}/edit`)
+            }
+          >
+            {value}
+          </Button>
+          {record.url ? (
+            <a href={record.url} target="_blank" rel="noopener noreferrer" title={record.url}>
+              <LinkOutlined />
+            </a>
+          ) : null}
+        </Space>
       ),
     },
     {
@@ -389,6 +396,11 @@ export function VersionListPage() {
                         >
                           {version.version}
                         </Button>
+                        {version.url ? (
+                          <a href={version.url} target="_blank" rel="noopener noreferrer" title={version.url}>
+                            <LinkOutlined />
+                          </a>
+                        ) : null}
                         <div className="mobile-list-meta">
                           <div className="mobile-list-row">
                             <Text className="mobile-list-label">状态</Text>

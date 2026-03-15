@@ -18,6 +18,7 @@ type Version struct {
 	Major       uint           `gorm:"column:major"`
 	Minor       uint           `gorm:"column:minor"`
 	Patch       uint           `gorm:"column:patch"`
+	URL         string         `gorm:"column:url"`
 	Status      string         `gorm:"column:status"`
 	PublishedAt *time.Time     `gorm:"column:published_at"`
 	CreatedAt   time.Time      `gorm:"column:created_at"`

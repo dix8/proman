@@ -36,6 +36,7 @@ type CreateVersionInput struct {
 	Major     *int
 	Minor     *int
 	Patch     *int
+	URL       *string
 }
 
 type UpdateVersionInput struct {
@@ -44,6 +45,7 @@ type UpdateVersionInput struct {
 	Major     *int
 	Minor     *int
 	Patch     *int
+	URL       *string
 }
 
 type ListVersionsResult struct {
@@ -145,6 +147,10 @@ func (s *VersionService) Create(ctx context.Context, input CreateVersionInput) (
 		Status:    model.VersionStatusDraft,
 	}
 
+	if input.URL != nil {
+		version.URL = *input.URL
+	}
+
 	if err := s.versionRepo.Create(ctx, version); err != nil {
 		var mysqlErr *mysqlDriver.MySQLError
 		if errors.As(err, &mysqlErr) && mysqlErr.Number == 1062 {
@@ -166,7 +172,7 @@ func (s *VersionService) Update(ctx context.Context, input UpdateVersionInput) (
 		return nil, err
 	}
 
-	updated, err := s.versionRepo.UpdateDraftSemverByIDAndUserID(ctx, input.VersionID, input.UserID, major, minor, patch)
+	updated, err := s.versionRepo.UpdateDraftSemverByIDAndUserID(ctx, input.VersionID, input.UserID, major, minor, patch, input.URL)
 	if err != nil {
 		var appErr *apperror.AppError
 		if errors.As(err, &appErr) {

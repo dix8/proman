@@ -168,7 +168,7 @@ func (r *VersionRepository) FindPublishedByProjectIDAndParts(ctx context.Context
 	return &version, nil
 }
 
-func (r *VersionRepository) UpdateDraftSemverByIDAndUserID(ctx context.Context, versionID, userID uint64, major, minor, patch uint) (*model.Version, error) {
+func (r *VersionRepository) UpdateDraftSemverByIDAndUserID(ctx context.Context, versionID, userID uint64, major, minor, patch uint, url *string) (*model.Version, error) {
 	var version model.Version
 
 	err := r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
@@ -187,6 +187,12 @@ func (r *VersionRepository) UpdateDraftSemverByIDAndUserID(ctx context.Context, 
 			"patch": patch,
 		}).Error; err != nil {
 			return err
+		}
+
+		if url != nil {
+			if err := tx.Model(&version).Update("url", *url).Error; err != nil {
+				return err
+			}
 		}
 
 		if err := scopedVersionQuery(tx.WithContext(ctx), userID).Where("versions.id = ?", versionID).First(&version).Error; err != nil {

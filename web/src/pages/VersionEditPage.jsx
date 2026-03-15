@@ -93,10 +93,11 @@ export function VersionEditPage() {
             major: versionData.major,
             minor: versionData.minor,
             patch: versionData.patch,
+            url: versionData.url || "",
           });
         } else {
           setVersion(null);
-          form.setFieldsValue({ major: 1, minor: 0, patch: 0 });
+          form.setFieldsValue({ major: 1, minor: 0, patch: 0, url: "" });
         }
       } catch (error) {
         if (cancelled) {
@@ -142,6 +143,7 @@ export function VersionEditPage() {
         major: updated.major,
         minor: updated.minor,
         patch: updated.patch,
+        url: updated.url || "",
       });
       messageApi.success(`版本 ${updated.version} 已更新`);
     } catch (error) {
@@ -275,6 +277,17 @@ export function VersionEditPage() {
                       key: "status",
                       label: "版本状态",
                       children: isReadOnly ? "published" : "draft",
+                    },
+                    {
+                      key: "url",
+                      label: "发布地址",
+                      children: version?.url ? (
+                        <a href={version.url} target="_blank" rel="noopener noreferrer">
+                          {version.url}
+                        </a>
+                      ) : (
+                        <Text type="secondary">未设置</Text>
+                      ),
                     },
                     {
                       key: "published_at",

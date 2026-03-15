@@ -1,4 +1,4 @@
-import { Form, InputNumber, Space } from "antd";
+import { Form, Input, InputNumber, Space } from "antd";
 
 export function VersionForm({ form, disabled = false, onFinish }) {
   return (
@@ -55,6 +55,17 @@ export function VersionForm({ form, disabled = false, onFinish }) {
           />
         </Form.Item>
       </Space>
+      <Form.Item
+        label="发布地址"
+        name="url"
+        rules={[{ type: "url", message: "请输入有效的 URL" }]}
+      >
+        <Input
+          placeholder="https://..."
+          disabled={disabled}
+          allowClear
+        />
+      </Form.Item>
     </Form>
   );
 }

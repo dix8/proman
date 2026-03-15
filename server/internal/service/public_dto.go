@@ -12,6 +12,7 @@ type PublicVersionDTO struct {
 	Major       uint    `json:"major"`
 	Minor       uint    `json:"minor"`
 	Patch       uint    `json:"patch"`
+	URL         string  `json:"url"`
 	Version     string  `json:"version"`
 	Status      string  `json:"status"`
 	PublishedAt *string `json:"published_at"`
